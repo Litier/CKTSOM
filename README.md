@@ -3,7 +3,7 @@ binary complete k-ary self organizing maps
 
 #### Descripción 
 
-Librería diseñada para R la cual permite la construcción y visualización de un árbol k enario completo. 
+Librería diseñada para R la cual permite la construcción y visualización de un árbol k-anario completo. 
 Para la construcción del árbol se utilizó Self-Organizing Maps (SOM) que es un tipo de red neuronal  el cual tiene la capacidad de realizar aprendizaje automático y se caracteriza por poder agrupar datos multidimensionales.
 La visualización gráfica está enfocada en una matriz de gráficos de dispersión.
 
