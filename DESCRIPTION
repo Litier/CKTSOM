@@ -1,9 +1,10 @@
 Package: BKTSOM
 Type: Package
-Title: What the Package Does (Title Case)
+Title: construcción y visualización de un árbol k-anario completo
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Date:2017-01-25
+Author: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
+Maintainer: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
+Description: Permite la construcción y visualización de un árbol k-anario completo. Para la construcción del árbol se utilizó Self-Organizing Maps (SOM) que es un tipo de red neuronal el cual tiene la capacidad de realizar aprendizaje automático y se caracteriza por agrupar datos multidimensionales. La visualización gráfica está enfocada en una matriz de gráficos de dispersión.
 License: What license is it under?
 LazyData: TRUE

@@ -37,11 +37,15 @@ makePairs <- function(data)
 
 
 
-graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorClustersDatos){
+graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorClustersDatos = NA){
 
   gg1 = makePairs(datos)
   mega_iris = data.frame(gg1$all)
-  mega_iris = data.frame(gg1$all, Categoria=rep(vectorClustersDatos, length=nrow(gg1$all)))
+  if( is.numeric(vectorClustersDatos)){
+    mega_iris = data.frame(gg1$all, Categoria=rep(vectorClustersDatos, length=nrow(gg1$all)))
+  }
+
+
 
   ggneurona = makePairs(neuronas)
   mega_neuronas = data.frame(ggneurona$all)
@@ -49,8 +53,14 @@ graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorC
 
   # mi pairs plot
   p <-ggplot(mega_iris, aes_string(x = "x", y = "y")) +
-    facet_grid(xvar ~ yvar, scales = "free")+
-    geom_point(aes(colour=factor(Categoria)),size = 1.2)
+    facet_grid(xvar ~ yvar, scales = "free")
+    if( is.numeric(vectorClustersDatos)){
+      p <- p +geom_point(aes(colour=factor(Categoria)),size = 1.2)
+    }
+    else {
+      p <- p + geom_point(size = 1.2)
+    }
+
 
 
 
@@ -80,5 +90,6 @@ graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorC
 
 }
 ##########
+
 
 
