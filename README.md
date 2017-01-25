@@ -100,6 +100,7 @@ for (i in 1:150){
 }
 #Grafica
 
-BKTSOM::graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
-
+BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia)
+BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters)
+BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters,vectorClustersDatos)
 ```
