@@ -88,12 +88,13 @@ for(i in 1:length(dataPesos[,1])){
 vectorClusters <- c(1,2,2,2,3,2,3)
 
 for (i in 1:150){
-  n<- BKTSOM::FindBMU(dataIris[i,],dataPesos)
+  n<- FindBMU(dataIris[i,],dataPesos)
   vectorClustersDatos[i] <- vectorClusters[n]
 }
 
-BKTSOM::graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
+graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

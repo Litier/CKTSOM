@@ -64,7 +64,8 @@ dataPesos <- data.frame(matrizPesos)
 vectorClusters <- c(0,1,1,1,2,2,1)
 #############3
 graficar(dataPesos,2,matrizAdjacencia,vectorClusters)
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -1,6 +1,6 @@
 
 ##### buscar prototipo mas sercano
-FindBMU <- function(dato,prototipos){
+findBMU <- function(dato,prototipos){
   d <-distancia(prototipos,dato)
   dminima <-min(d)
   index <- match(dminima,d)

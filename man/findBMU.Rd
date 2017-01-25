@@ -62,12 +62,13 @@ for(i in 1:length(neuronas[,1])){
 vectorClusters <- c(1,2,2,2,3,2,3)
 # busca el BMU de cada dato de iris para luego asignar su grupo copiandolo del BMU
 for (i in 1:150){
-  n<- FindBMU(dataIris[i,],neuronas)
+  n<- findBMU(dataIris[i,],neuronas)
   vectorClustersDatos[i] <- vectorClusters[n]
 }
 ##vector que contiene el BMU de cada dato
 vectorClustersDatos
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

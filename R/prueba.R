@@ -122,10 +122,10 @@ for(i in 1:length(dataPesos[,1])){
 vectorClusters <- c(1,2,2,2,3,2,3)
 
 for (i in 1:150){
-  n<- BKTSOM::FindBMU(dataIris[i,],dataPesos)
+  n<- findBMU(dataIris[i,],dataPesos)
   vectorClustersDatos[i] <- vectorClusters[n]
 }
 
-BKTSOM::graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
+graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
 
 
