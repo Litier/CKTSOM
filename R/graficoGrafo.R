@@ -37,7 +37,7 @@ makePairs <- function(data)
 
 
 
-graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorClustersDatos = NA){
+graficarGrafo <- function(datos,neuronas,matrizAdjacencia,vectorClusters = NA,vectorClustersDatos = NA){
 
   gg1 = makePairs(datos)
   mega_iris = data.frame(gg1$all)
@@ -49,8 +49,9 @@ graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorC
 
   ggneurona = makePairs(neuronas)
   mega_neuronas = data.frame(ggneurona$all)
-  mega_neuronas = data.frame(ggneurona$all, Categoria=rep(vectorClusters, length=nrow(ggneurona$all)))
-
+  if( is.numeric(vectorClusters)){
+    mega_neuronas = data.frame(ggneurona$all, Categoria=rep(vectorClusters, length=nrow(ggneurona$all)))
+  }
   # mi pairs plot
   p <-ggplot(mega_iris, aes_string(x = "x", y = "y")) +
     facet_grid(xvar ~ yvar, scales = "free")
@@ -58,38 +59,39 @@ graficarGrafo <- function(neuronas,datos,matrizAdjacencia,vectorClusters,vectorC
       p <- p +geom_point(aes(colour=factor(Categoria)),size = 1.2)
     }
     else {
-      p <- p + geom_point(size = 1.2)
+      p <- p + geom_point(size = 1.2,colour = "green")
     }
 
 
 
 
 
-  for (i in 1:length(neuronas[,1])) {
-    j <- 1
-    while (j < i){
+  for (i in 1:length(matrizAdjacencia[,1])) {
+    for (j in  1:length(matrizAdjacencia[1,])) {
       if (matrizAdjacencia[i,j] == 1){
-        for(k in 0:length(neuronas[1,])*length(neuronas[1,])-length(neuronas[1,]) -1){
+       for(k in 0:length(neuronas[1,])*length(neuronas[1,])-length(neuronas[1,]) -1){
 
           p <- p + geom_path(data = mega_neuronas[c(i,j)+((length(neuronas[,1])*k)),])
         }
-      }
-      j<- j +1
+     }
     }
-
-
-
-
-
-
   }
-  p <- p +geom_point(data = mega_neuronas,aes(colour=factor(Categoria)),size = 2, na.rm = TRUE, alpha=0.8)
+
+  if( is.numeric(vectorClusters)){
+
+    p <- p +geom_point(data = mega_neuronas,aes(colour=factor(Categoria)),size = 2, na.rm = TRUE, alpha=0.8)
+  } else {
+
+    p <- p + geom_point(data = mega_neuronas,size = 1.2,colour = "red")
+  }
+
 
 
   p
 
 }
 ##########
+
 
 
 

@@ -10,17 +10,20 @@ Funcion para graficar matriz de dispersion con un grafo sobrepuesto
 
 }
 \usage{
-graficarGrafo(neuronas,data,matrizAdjacencia,neuronClusters,dataCluster)
+graficarGrafo(datos,neuronas,matrizAdjacencia,neuronClusters,dataCluster)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+
+\item{data}{
+%%     ~~Describe \code{x} here~~
+  Data frame que contiene los puntos
+}
   \item{neuronas}{
 %%     ~~Describe \code{x} here~~
   Data frame de las neuronas
-}  \item{data}{
-%%     ~~Describe \code{x} here~~
-  Data frame que contiene los puntos
-}  \item{matrizAdjacencia}{
+}    \item{matrizAdjacencia}{
 %%     ~~Describe \code{x} here~~
   Matriz que contiene las interconexiones del grafo
 }  \item{neuronClusters}{
@@ -91,8 +94,12 @@ for (i in 1:150){
   n<- FindBMU(dataIris[i,],dataPesos)
   vectorClustersDatos[i] <- vectorClusters[n]
 }
-
-graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
+##grafico sin agrupacion
+graficarGrafo(dataIris,dataPesos,matrizAdjacencia)
+##grafico con agrupacion de las neurnas
+graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters)
+##grafico con agrupacion de neuronas y datos
+graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters,vectorClustersDatos)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
