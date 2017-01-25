@@ -20,6 +20,7 @@ install_github("Litier/BKTSOM")
 ###### Ejemplo 1
 
 ```R
+library(ggplot2)
 #Inicializar variables
 matrizAdjacencia <- matrix(data = rep(0,49),nrow = 7)
 matrizAdjacencia[2,1]<- 1
@@ -41,6 +42,7 @@ BKTSOM::graficar(dataPesos,2,matrizAdjacencia,vectorClusters)
 ```
 ###### Ejemplo 2
 ```R
+library(ggplot2)
 #Inicializar variables
 matrizAdjacencia <- matrix(data = rep(0,169),nrow = 13)
 matrizAdjacencia[2,1]<- 1
@@ -64,6 +66,7 @@ BKTSOM::graficar(dataPesos,3,matrizAdjacencia,vectorClusters)
 ```
 ###### Ejemplo 3. Grafico grafo
 ```R
+library(ggplot2)
 dataIris <-  iris
 dataIris <- dataIris[,-5]
 names (dataIris) <-c("X1","X2","X3","X4")
@@ -92,10 +95,11 @@ for(i in 1:length(dataPesos[,1])){
 vectorClusters <- c(1,2,2,2,3,2,3)
 #Asigna el BMU a cada dato
 for (i in 1:150){
-  n<- BKTSOM::FindBMU(dataIris[i,],dataPesos)
+  n<- BKTSOM::findBMU(dataIris[i,],dataPesos)
   vectorClustersDatos[i] <- vectorClusters[n]
 }
 #Grafica
+
 BKTSOM::graficarGrafo(dataPesos,dataIris,matrizAdjacencia,vectorClusters,vectorClustersDatos)
 
 ```
