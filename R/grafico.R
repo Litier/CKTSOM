@@ -14,6 +14,17 @@ miniLista <- function(padre,k,matriz){
 }
 
 
+miniLista2 <- function(padre,k){
+  hijos <- buscaHijos(padre ,k)
+  nimil <- c(hijos[1])
+  for (i in hijos[2:length(hijos)]) {
+    nimil <- c(nimil,padre,i)
+  }
+
+  return(nimil)
+}
+
+
 
 makePairs <- function(data)
 {
@@ -50,7 +61,7 @@ buscaHijos <- function(numero,k){
 }
 
 
-graficar <- function(neuronas,k,matrizAdjacencia,vectorClusters){
+graficar2 <- function(neuronas,k,matrizAdjacencia,vectorClusters){
   largo = length(neuronas[,1])-1
 
   ##gg1 = makePairs(datos)
@@ -90,6 +101,37 @@ graficar <- function(neuronas,k,matrizAdjacencia,vectorClusters){
 
   p
 
+}
+
+graficar <- function(datos,neuronas,k){
+  gg1 = makePairs(datos)
+  mega_iris = data.frame(gg1$all)
+
+  ggneurona = makePairs(neuronas)
+  mega_neuronas = data.frame(ggneurona$all)
+  #mega_neuronas = data.frame(ggneurona$all, Species=rep(iris$Species, length=nrow(ggneurona$all)))
+
+
+
+
+  # mi pairs plot
+  p <-ggplot(mega_iris, aes_string(x = "x", y = "y")) +
+    facet_grid(xvar ~ yvar, scales = "free") +
+    geom_point(colour = "red",size = 1) +
+    geom_point(data = mega_neuronas,size = 1.5,shape = 19)
+  color <- 1
+
+  for (i in 1:buscaPadre(length(neuronas[,1]),k)) {
+    if (k^color == i) {
+      color <- color +1
+    }
+    for(j in 0:(length(mega_iris[,1]) /length(datos[,1])-1)){
+      p <- p + geom_path(data = mega_neuronas[miniLista2(i,k)+((length(neuronas[,1])*j)),],colour = color)
+    }
+
+
+  }
+  p
 }
 ##########
 

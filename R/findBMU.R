@@ -1,7 +1,7 @@
 
 ##### buscar prototipo mas sercano
-findBMU <- function(dato,prototipos){
-  d <-distancia(prototipos,dato)
+findBMU_R <- function(dato,prototipos){
+  d <-distancia_R(prototipos,dato)
   dminima <-min(d)
   index <- match(dminima,d)
 
@@ -11,7 +11,7 @@ findBMU <- function(dato,prototipos){
 
 
 #### calcula la distancia entre 2 puntos
-calculaDistancia <- function(punto1,punto2,datos){
+calculaDistancia_R <- function(punto1,punto2,datos){
   tipoDeDatos<-sapply(datos, class)
   lista<-1:length(datos)
   lista[tipoDeDatos == "numeric"]<- 1
@@ -32,10 +32,10 @@ calculaDistancia <- function(punto1,punto2,datos){
 
 
 ##distancia hasta los prototipos
-distancia <- function(prototipos,puntofijo){
+distancia_R <- function(prototipos,puntofijo){
   resultado <- c()
   for (i in 1:length(prototipos[,1])){
-    resultado <- c(resultado,calculaDistancia(puntofijo,prototipos[i,],prototipos))
+    resultado <- c(resultado,calculaDistancia_R(puntofijo,prototipos[i,],prototipos))
   }
   return(resultado)
 }

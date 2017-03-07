@@ -1,3 +1,4 @@
+
 library(ggplot2)
 
 miniLista <- function(padre,k,matriz){
@@ -55,12 +56,12 @@ graficarGrafo <- function(datos,neuronas,matrizAdjacencia,vectorClusters = NA,ve
   # mi pairs plot
   p <-ggplot(mega_iris, aes_string(x = "x", y = "y")) +
     facet_grid(xvar ~ yvar, scales = "free")
-    if( is.numeric(vectorClustersDatos)){
-      p <- p +geom_point(aes(colour=factor(Categoria)),size = 1.2)
-    }
-    else {
-      p <- p + geom_point(size = 1.2,colour = "green")
-    }
+  if( is.numeric(vectorClustersDatos)){
+    p <- p +geom_point(aes(colour=factor(Categoria)),size = 1.2)
+  }
+  else {
+    p <- p + geom_point(size = 1.2,colour = "green")
+  }
 
 
 
@@ -68,12 +69,13 @@ graficarGrafo <- function(datos,neuronas,matrizAdjacencia,vectorClusters = NA,ve
 
   for (i in 1:length(matrizAdjacencia[,1])) {
     for (j in  1:length(matrizAdjacencia[1,])) {
+
       if (matrizAdjacencia[i,j] == 1){
-       for(k in 0:length(neuronas[1,])*length(neuronas[1,])-length(neuronas[1,]) -1){
+        for(k in 0:length(neuronas[1,])*length(neuronas[1,])-length(neuronas[1,]) -1){
 
           p <- p + geom_path(data = mega_neuronas[c(i,j)+((length(neuronas[,1])*k)),])
         }
-     }
+      }
     }
   }
 

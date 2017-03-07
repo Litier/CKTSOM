@@ -8,3 +8,8 @@ Maintainer: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
 Description: Permite la construcción y visualización de un árbol k-anario completo. Para la construcción del árbol se utilizó Self-Organizing Maps (SOM) que es un tipo de red neuronal el cual tiene la capacidad de realizar aprendizaje automático y se caracteriza por agrupar datos multidimensionales. La visualización gráfica está enfocada en una matriz de gráficos de dispersión.
 License: What license is it under?
 LazyData: TRUE
+Imports:
+    Rcpp (>= 0.12.8)
+LinkingTo:
+    Rcpp
+RoxygenNote: 6.0.1

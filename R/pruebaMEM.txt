@@ -1,0 +1,53 @@
+  data(iris)
+
+  #View(trees)
+  #View(iris)
+  #################
+  nIteraciones <- 600000
+  alfaMAyor <- 1
+  AlfaMenor<- 0
+  Rinicial <- 7
+  Rfinal <- 1
+  k <- 2
+  h <- 3
+
+  #####################prueba con iris
+
+  ml <- list(iris$Sepal.Length,iris$Sepal.Width,iris$Petal.Length,iris$Petal.Width,iris$Species)
+  t <- proc.time() # Inicia el cron?metro
+  neuronas <- myFunc(k,h,alfaMAyor,AlfaMenor,Rinicial,Rfinal,nIteraciones, ml, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"))
+  # NUESTRO CODIGO
+  tiempo <-proc.time()-t    # Detiene el cron?metro
+  neuronas$Species<-NA
+  irisMa<- rbind(iris,neuronas)
+  nGraficos<- c(1:4)
+
+  graficar(iris[,-5],neuronas[,-5],k)
+
+
+  ######### prueba #View(trees)
+  data(trees)
+
+  ml <- list(trees$Girth, trees$Height, trees$Volume)
+  t <- proc.time() # Inicia el cron?metro
+  neuronas <- myFunc(k,h,alfaMAyor,AlfaMenor,Rinicial,Rfinal,nIteraciones, ml, c("Girth", "Height", "Volume"))
+  # NUESTRO CODIGO
+  tiempo <-proc.time()-t    # Detiene el cron?metro
+  #irisMa<- rbind(iris,neuronas)
+  #nGraficos<- c(1:3)
+
+  graficar(trees,neuronas,k)
+
+################################   LifeCycleSavings
+data(LifeCycleSavings)
+View(LifeCycleSavings)
+
+
+ml <- as.list(LifeCycleSavings[,1:5])
+nombres <- names(LifeCycleSavings)
+neuronas <- myFunc(k,h,alfaMAyor,AlfaMenor,Rinicial,Rfinal,nIteraciones, ml, nombres)
+
+graficar(LifeCycleSavings,neuronas,k)
+
+
+
