@@ -1,12 +1,12 @@
 Package: BKTSOM
 Type: Package
-Title: construcción y visualización de un árbol k-anario completo
+Title: Construction, training and visualization of Self-Organizing Trees
 Version: 0.1.0
 Date:2017-01-25
-Author: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
+Author: César A. Astudillo <cesar dot astudillo at gmail>  and Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
 Maintainer: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
-Description: Permite la construcción y visualización de un árbol k-anario completo. Para la construcción del árbol se utilizó Self-Organizing Maps (SOM) que es un tipo de red neuronal el cual tiene la capacidad de realizar aprendizaje automático y se caracteriza por agrupar datos multidimensionales. La visualización gráfica está enfocada en una matriz de gráficos de dispersión.
-License: What license is it under?
+Description: a tool for defining, training and visualizing self-organizing trees. The training phase is based on the well known self-organizing maps (SOM) algorithm, a type of neural network that performs unsupervised learning, grouping multidimensional data. The graphic Visualization is focused on a scatterplot the shows the data being analized as long as the tree, showing the neurons (nodes) and the connections
+License: GPL v3
 LazyData: TRUE
 Imports:
     Rcpp (>= 0.12.8)
