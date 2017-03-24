@@ -1,6 +1,6 @@
 # Self-Organizing Trees
 
-Implemenation of the Self Organizing maps algorithm.
+Implemenation of the Self-Organizing Trees algorithm, a tree-based adaptation of the SOM.
 
 #### DESCRIPTION
 
