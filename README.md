@@ -1,4 +1,4 @@
-# SOT
+# Self-Organizing Trees
 
 Implemenation of the Self Organizing maps algorithm.
 
