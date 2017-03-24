@@ -91,26 +91,26 @@ AdjacencyMatrix[4,2]<- 1
 AdjacencyMatrix[5,2]<- 1
 AdjacencyMatrix[6,3]<- 1      # 3 -- 6
 
-matrizPesos <- matrix(runif(7, 1.0, 5.5))
-matrizPesos <- cbind(matrizPesos,runif(7, 3.0, 9.5))
-matrizPesos <- cbind(matrizPesos,runif(7, 0.0, 9.5))
-matrizPesos <- cbind(matrizPesos,runif(7, 7.0, 8.5))
-dataPesos <- data.frame(matrizPesos)
+MatrixWeights <- matrix(runif(7, 1.0, 5.5))
+MatrixWeights <- cbind(MatrixWeights,runif(7, 3.0, 9.5))
+MatrixWeights <- cbind(MatrixWeights,runif(7, 0.0, 9.5))
+MatrixWeights <- cbind(MatrixWeights,runif(7, 7.0, 8.5))
+dataDF <- data.frame(MatrixWeights)
 #Inicializa las neuronas copiando los datos de forma aleatoria
-for(i in 1:length(dataPesos[,1])){
+for(i in 1:length(dataDF[,1])){
   n<- ceiling(runif(1,1,150))
-  dataPesos[i,]  <- dataIris[n,]
+  dataDF[i,]  <- dataIris[n,]
 }
 #Define el grupo de cada neurona
-vectorClusters <- c(1,2,2,2,3,2,3)
+ClusterVectors <- c(1,2,2,2,3,2,3)
 #Asigna el BMU a cada dato
 for (i in 1:150){
-  n<- BKTSOM::findBMU(dataIris[i,],dataPesos)
-  vectorClustersDatos[i] <- vectorClusters[n]
+  n<- BKTSOM::findBMU(dataIris[i,],dataDF)
+  ClusterVectorsDF[i] <- vectorClusters[n]
 }
 #Grafica
 
-BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia)
-BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters)
-BKTSOM::graficarGrafo(dataIris,dataPesos,matrizAdjacencia,vectorClusters,vectorClustersDatos)
+#BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix)
+#BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix,ClusterVectors)
+BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix,ClusterVectors,ClusterVectorsDF)
 ```
