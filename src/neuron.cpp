@@ -3,261 +3,228 @@
 using namespace Rcpp;
 
 
-//genera vector de largo en de numeros random entre [min,max]
-Rcpp::NumericVector runifC(int n, double min=0, double max=1) {
-  Rcpp::NumericVector out(n);
-
-  for(int i = 0; i < n; ++i) {
-    out[i] = min + ((double) rand() / (RAND_MAX)) * (max - min);
+//determina cuantas neurons hay en el arbol
+int lengthNeurons(int numberOfChildrenperNode, int treeHeight){
+  int sum = 0 ;
+  for (int i = 0 ; i <= treeHeight ; i++ ){
+    sum = sum + pow(numberOfChildrenperNode,i);
   }
-  return out;
-}
-
-//determina cuantas neuronas hay en el arbol
-int totalNeuronas(int nHijos, int altura){
-  int total = 0 ;
-  for (int i = 0 ; i <= altura ; i++ ){
-    total = total + pow(nHijos,i);
-  }
-  return total;
+  return sum;
 }
 
 //genera un vector de los hijos de una neurona
-Rcpp::NumericVector hijos(int numero,int  k){
-  Rcpp::NumericVector a(k);
-  numero++;  //aumento el numero para tener la lista que empiesa 1
-  int n = 1;
-  for (int i = 1; i <=k ;i++){
-    a[k -i] = k*numero+n -1;  //disminulle el numero para una lista que empiesa en 0
+Rcpp::NumericVector findChildren(int neuron,int  numberOfChildrenperNode){
+  Rcpp::NumericVector children(numberOfChildrenperNode);
+  neuron++;  //aumento el numero para tener la lista que empiesa 1
+  int n = 0;
+  for (int i = 1; i <=numberOfChildrenperNode ;i++){
+    children[numberOfChildrenperNode -i] = numberOfChildrenperNode*neuron+n;  //disminulle el numero para una lista que empiesa en 0
     n = n -1;
   }
-  return a;
+  return children;
 }
 
 //obtiene el padre de una neurona
-int buscapadre(int numero,int k){
-  numero++;  //aumento el numero para tener la lista que empiesa 1
-  int padre = (numero+k-2)/k;
-  return padre-1;  //disminulle el numero para una lista que empiesa en 0
+int findFather(int neuron,int numberOfChildrenperNode){
+  neuron++;  //aumento el numero para tener la lista que empiesa 1
+  int father = (neuron+numberOfChildrenperNode-2)/numberOfChildrenperNode;
+  return father-1;  //disminulle el numero para una lista que empiesa en 0
 }
 
-
-Rcpp::NumericVector buscarHermanos(int numero ,int k){
-  int padre = buscapadre(numero,k);
-  Rcpp::NumericVector hermanos = hijos(padre,k);
-  return hermanos;
+//obtiene los hermanos de una neurona, retornando un vector (incluyendo la neurona )
+Rcpp::NumericVector findBrothers(int neuron ,int numberOfChildrenperNode){
+  int father = findFather(neuron,numberOfChildrenperNode);
+  Rcpp::NumericVector brothers = findChildren(father,numberOfChildrenperNode);
+  return brothers;
 }
 
-
-Rcpp::NumericVector mueveNeurona(Rcpp::NumericVector neurona, Rcpp::NumericVector estimulo,
-                                 float alfa){
-  for (int i =0 ; i <neurona.size(); i++){
-    neurona[i] = neurona[i] - alfa* (neurona[i] - estimulo[i]);
+//mueve la neurona al estimulo
+Rcpp::NumericVector updateNeuron(Rcpp::NumericVector neuron, Rcpp::NumericVector stimulus,float learningRate){
+  for (int i =0 ; i <neuron.size(); i++){
+    neuron[i] = neuron[i] - learningRate* (neuron[i] - stimulus[i]);
   }
-  return neurona;
+  return neuron;
 }
 
+//actualiza el arbol
+NumericMatrix updateStructure(NumericMatrix neurons, NumericVector stimulus,
+                              float radius, float learningRate, int BMU, int numberOfChildrenperNode){
+  //mueve el BM
+  neurons(BMU,_) =updateNeuron(neurons(BMU,_),stimulus,learningRate);
 
+  //busca el padre del BMU
+  int father = findFather(BMU,numberOfChildrenperNode);
 
+  //disminuye la tasa de aprendizaje, ya que en cada nivel que sube el entrenamiento
+  //se encuentra mas lejos del BMU y mas cerca de la raiz
+  learningRate =learningRate * 0.9;
 
-NumericMatrix mueveEstructura(NumericMatrix neuronas, NumericVector estimulo,
-                              float radio, float alfa, int neuronaEstimulada, int k){
-  //mover
-//  Rcpp::Rcout << "neuronaEstimulada is " << neuronaEstimulada << std::endl;
-
-
-  //NumericVector eliminar = neuronas(neuronaEstimulada,_);
-  //  Rcpp::Rcout << "neuronas(_,neuronaEstimulada) is " << eliminar << std::endl;
-  //  Rcpp::Rcout << "estimulo is " << estimulo << std::endl;
-  //Rcpp::Rcout << "alfa is " << alfa << std::endl;
-
-  //  Rcpp::Rcout << "----->neuronaEstimulada is " << neuronaEstimulada << std::endl;
-
-  neuronas(neuronaEstimulada,_) =mueveNeurona(neuronas(neuronaEstimulada,_),estimulo,alfa);
-  //modificar neuronas
-
-  int padre = buscapadre(neuronaEstimulada,k);
-  radio = radio - 1;
-  alfa =alfa * 0.9;
-  //  Rcpp::Rcout << "padre is " << padre << std::endl;
-  //mueve padre
-  if (padre >= 0 && radio > 1){
-    neuronas = mueveEstructura(neuronas, estimulo, radio,  alfa,  padre,  k);
+  //mueve el padre
+  if (father >= 0 && radius > 1){
+    neurons = updateStructure(neurons, stimulus, radius,  learningRate,  father,  numberOfChildrenperNode);
 
 
   }
 
   //mueve hermano
-  if(neuronaEstimulada > 0 && radio > 1){
-    Rcpp::NumericVector hermanos = buscarHermanos(neuronaEstimulada,k);
-    for (int i = 0; i < hermanos.size();i++){
-      int tempHer = hermanos[i];
-      if (tempHer!= neuronaEstimulada){
-        neuronas(tempHer,_) =mueveNeurona(neuronas(tempHer,_),estimulo,alfa*0.2);
+  if(BMU > 0 && radius > 1){
+    Rcpp::NumericVector brothers = findBrothers(BMU,numberOfChildrenperNode);
+    for (int i = 0; i < brothers.size();i++){
+      int brother = brothers[i];
+      //revisa para no mover el BMU
+      if (brother!= BMU){
+        //mueve los hermanos reduciendo la tasa de aprendizaje aun mas, para evitar que se junte con el BMU
+        neurons(brother,_) =updateNeuron(neurons(brother,_),stimulus,learningRate*0.2);
       }
     }
   }
-
-
-  return neuronas;
+  return neurons;
 }
 
+//calcula la distancia eucludiana entre 2 puntos
+float calculateEuclideanDistance2Point (NumericVector point1,NumericVector point2 ){
+  NumericVector resta(point1.size());
+  point1[is_na(point1)] = 0;
+  point2[is_na(point2)] = 0;
 
-
-NumericVector buscarHojas(int k,int h){
-  int total = pow(k,h);
-  NumericVector hojas(total);
-  int largo = totalNeuronas(k,h);
-  int primeraHoja = largo-total+1;
-  for(int i = 0; i < total ; i++){
-    hojas(i) = primeraHoja + i-1;
-  }
-  return hojas;
-}
-
-
-float calculaDistancia (NumericVector punto1,NumericVector punto2 ){
-  NumericVector resta(punto1.size());
-  punto1[is_na(punto1)] = 0;
-  punto2[is_na(punto2)] = 0;
-
-  resta = punto1 - punto2;
+  resta = point1 - point2;
   resta = resta*resta;
   float disc = sum(resta);
   float d = sqrt(disc);
   return d;
 }
 
+//calcula la distancia del estimulo a las neuronas
+NumericVector distance (NumericMatrix neurons,NumericVector stimulus){
 
-
-
-
-NumericVector distancia_arbol (NumericMatrix neuronas,NumericVector puntofijo, int k, int h){
-  NumericVector indexHojas = buscarHojas(k,h);
-  NumericVector distancias(indexHojas.size());
-
-
-
-
-  for (int i = 0; i <indexHojas.size();i++ ){
-    distancias(i) = calculaDistancia(neuronas(indexHojas(i),_),puntofijo);
+  NumericVector distances(neurons(_,1).size());
+  for (int i = 0; i <distances.size();i++ ){
+    distances(i) = calculateEuclideanDistance2Point(neurons(i,_),stimulus);
   }
-  //Rcpp::Rcout << "distancias is " << distancias << std::endl;
-
-  return distancias;
+  return distances;
 }
 
+//Busca el BMU partiendo en la raiz, llegando a las hojas
+int FindBMU_tree(NumericVector stimulus,NumericMatrix neurons,int numberOfChildrenperNode, int treeHeight){
+  int BMU = 0;
+  int lastfather = (neurons(_,0).size()-1)-pow(numberOfChildrenperNode,treeHeight);
 
-int FindBMU_arbol(NumericMatrix datos,NumericMatrix neuronas,int indexEstimulo,int k, int h){
-  NumericVector dist = distancia_arbol(neuronas, datos(indexEstimulo,_),k,h);
-
-  NumericVector::iterator it = std::min_element(dist.begin(), dist.end());
-  // we want the value so dereference
-  return it - dist.begin();
+  while (BMU <= lastfather){
+    //busca las neuronas del siguiente nivel
+    NumericVector children  = findChildren(BMU,numberOfChildrenperNode);
+    //genera un vector con las neuronas del nivel
+    NumericMatrix neuronsChildren(children.size(),stimulus.size());
+    for(int i = 0; i < children.size(); i++){
+      neuronsChildren(i,_) = neurons(children[i],_);
+    }
+    //calcula la distancia de el estimulo a las neuronas del nivel
+    NumericVector dist = distance(neuronsChildren,stimulus);
+    NumericVector::iterator it = std::min_element(dist.begin(), dist.end());
+    int indexBestNeuron = it - dist.begin();
+    //cambia el BMU al hijo mas cercano
+    BMU = children[indexBestNeuron];
+  }
+  return BMU;
 }
 
-
-
-
+//desordena el set de datos
+NumericMatrix disorder(NumericMatrix data){
+  int random1,random2;
+  for(int i = 0; i < data(_,0).size()*2/3;i++){
+    random1 = rand() % data(_,0).size();
+    NumericVector dataTemp = data(random1,_);
+    random2 = rand() % data(_,0).size();
+    data(random1,_)=data(random2,_);
+    data(random2,_)=dataTemp;
+  }
+  return data;
+}
 
 // [[Rcpp::export]]
-Rcpp::DataFrame myFunc(int k,int h,float alfaMAyor ,float AlfaMenor,
-                       int Rinicial,int  Rfinal, int nIteraciones
+Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode,int treeHeight,float initialLearningRate ,float finalLearningRate,
+                       int initialRadius,int  finalRadius, int iterations
                          , Rcpp::List lst,
                          Rcpp::CharacterVector Names = Rcpp::CharacterVector::create()) {
 
-  int n = lst.size();
-  int largoDatos = 0;
-  int nNeuronas = totalNeuronas(k,h);
+  int columnLength = lst.size();
+  int neuronsSize = lengthNeurons(numberOfChildrenperNode,treeHeight);
   SEXP ll = lst[0];
   Rcpp::NumericVector y(ll);
-  largoDatos = y.size();
+  int dataSize = y.size();
 
-
-  Rcpp::NumericMatrix datos(largoDatos,n);
-  for (int i = 0; i < n; i++) {
+  Rcpp::NumericMatrix data(dataSize,columnLength);
+  for (int i = 0; i < columnLength; i++) {
     SEXP ll = lst[i];
     Rcpp::NumericVector y(ll);
-    datos( _ ,i) =y;
+    data( _ ,i) =y;
   }
   //Datos listos para trabajar en matriz
 
-  //genera los datos de forma aleatoria
-  Rcpp::NumericMatrix neuronas(nNeuronas,n);
-  for (int i = 0; i < n; i++) {
-    neuronas(_,i)= runifC(nNeuronas,min(datos(_,i)) ,max(datos(_,i)));
+  Rcpp::NumericMatrix neurons(neuronsSize,columnLength);
 
-  }
   //genera los datos copiando del dataset
-  //Rcpp::NumericMatrix neuronas(nNeuronas,n);
   int minD =0;
-  int maxD = neuronas(_,0).size()-1;
+  int maxD = neurons(_,0).size()-1;
   int indexDato ;
-  for (int i = 0; i < nNeuronas; i++) {
+  for (int i = 0; i < neuronsSize; i++) {
     indexDato = minD + ((double) rand() / (RAND_MAX)) * (maxD - minD);
-    neuronas(i,_) = datos(indexDato,_);
+    neurons(i,_) = data(indexDato,_);
 
   }
-  //neuronas listas para mover
+  //neurons listas para mover
+
+  float learningRate = initialLearningRate;
+  float learningRateStep = (initialLearningRate - finalLearningRate) / iterations;
+
+  float radius = initialRadius;
+  float radiusStep = (initialRadius - finalRadius) / iterations;
 
 
-  //configuracion del radio
-  float alfa = alfaMAyor;
-  float restoAlfa = (alfaMAyor - AlfaMenor) / nIteraciones;
-  //configuracion de alfa
+  //desordena los datos
+  data = disorder(data);
+  //inicializa la epoca
+  int index = 0;
+  int dataLength = data(_,0).size();
 
-  float radio = Rinicial;
-  float restoRadio = (Rinicial - Rfinal) / nIteraciones;
+  ///////////////////////////////
+  ///////////////////////////////START TRAINING
+  ///////////////////////////////
 
-  for(int i = 0 ; i <nIteraciones ; i++){
-    Rcpp::NumericVector nRandomr = runifC(1,0,(largoDatos-1));
+  for(int i = 0 ; i <iterations ; i++){
+    //inicia nueva epoca
+    if (index == dataLength){
+      data = disorder(data);
+      index = 0;
+    }
 
-    int mejorNeurona = FindBMU_arbol( datos, neuronas,nRandomr(0),k, h);
-    //Rcpp::Rcout << "mejorNeurona111 is " << mejorNeurona << std::endl;
+    //busca el BMU
+    int bestNeuron = FindBMU_tree( data(index,_), neurons,numberOfChildrenperNode, treeHeight);
+    //actualiza la red neuronal
+    neurons = updateStructure( neurons,  data(index,_),round(radius),  learningRate, bestNeuron, numberOfChildrenperNode);
 
-    mejorNeurona = neuronas(_,0).size() - ( pow(k,h) -mejorNeurona);
-    //Rcpp::Rcout << "mejorNeurona22222222222222222 is " << mejorNeurona << std::endl;
-    ///
-    //Rcpp::Rcout << "mejorNeurona1 is " << mejorNeurona << std::endl;
-    // Rcpp::Rcout << "nRandomr[0] is " <<  nRandomr[0]<< std::endl;
-    ///
-
-    int random = (int)nRandomr[0];
-    //
-    // Rcpp::Rcout << "random is " <<  random<< std::endl;
-    //  Rcpp::Rcout << "neuronas is " <<  neuronas<< std::endl;
-    //  NumericVector n = datos(random,_);
-    //  Rcpp::Rcout << "datos(_,random) is " <<  n<< std::endl;
-    // Rcpp::Rcout << "round(radio) is " <<  round(radio)<< std::endl;
-    ///
-    //
-    neuronas = mueveEstructura( neuronas,  datos(random,_),round(radio),  alfa, mejorNeurona, k);
-    radio -= restoRadio;
-    alfa-=restoAlfa;
+    radius -= radiusStep;
+    learningRate -= learningRateStep;
+    index+=1;
   }
 
 
-
+  ///////////////////////////////
+  ///////////////////////////////END TRAINING
+  ///////////////////////////////
 
 
   //genera el dataFrame para retornar
-  Rcpp::List tmp(n);
+  Rcpp::List tmp(columnLength);
   Rcpp::CharacterVector lnames = Names.size() < lst.size() ?
   lst.attr("names") : Names;
-  Rcpp::CharacterVector names(n);
-  Rcpp::List listaTempo(nNeuronas);
-  for (int i = 0; i < n; i++) {
+  Rcpp::CharacterVector names(columnLength);
+  Rcpp::List listaTempo(neuronsSize);
+  for (int i = 0; i < columnLength; i++) {
     SEXP ll = lst[i];
     Rcpp::NumericVector y(ll);
-    largoDatos = y.size();
-    ////////////////generar la lista
-    //Rcpp::NumericVector xx(k*h, 2.0);
-
-    Rcpp::NumericVector xx = neuronas(_,i);
+    dataSize = y.size();
+    Rcpp::NumericVector xx = neurons(_,i);
     listaTempo = Rcpp::List::create(Rcpp::Named("vec") = xx);
-
-    ///////////////
-    // tmp[i + 2] = do_something(lst[i]);
     tmp[i ] = listaTempo;
     if (std::string(lnames[i]).compare("") != 0) {
       names[i] = lnames[i];
@@ -276,47 +243,32 @@ Rcpp::DataFrame myFunc(int k,int h,float alfaMAyor ,float AlfaMenor,
   Rcpp::DataFrame result(tmp);
   result.attr("names") = names;
 
-
-
-
-
-  //return result;
-
-
   return result;
 }
 
-NumericVector distancia (NumericMatrix neuronas,NumericVector puntofijo){
 
-  NumericVector distancias(neuronas(_,1).size());
-  for (int i = 0; i <neuronas(_,1).size();i++ ){
-    distancias(i) = calculaDistancia(neuronas(i,_),puntofijo);
-  }
-  //Rcpp::Rcout << "distancias is " << distancias << std::endl;
-
-  return distancias;
-}
-
+//metodos para topologia de grafo
+//busca el BMU entre todas las neuronas
 // [[Rcpp::export]]
-int FindBMU(Rcpp::List listNeuronas,Rcpp::NumericVector dato){
-  int n = listNeuronas.size();
-  int largoDatos = 0;
-  SEXP ll = listNeuronas[0];
+int FindBMU(Rcpp::List listNeuron,Rcpp::NumericVector stimulus){
+  int columnLength = listNeuron.size();
+  int dataSize = 0;
+  SEXP ll = listNeuron[0];
   Rcpp::NumericVector y(ll);
-  largoDatos = y.size();
+  dataSize = y.size();
 
 
-  Rcpp::NumericMatrix neuronas(largoDatos,n);
-  for (int i = 0; i < n; i++) {
-    SEXP ll = listNeuronas[i];
+  Rcpp::NumericMatrix neurons(dataSize,columnLength);
+  for (int i = 0; i < columnLength; i++) {
+    SEXP ll = listNeuron[i];
     Rcpp::NumericVector y(ll);
-    neuronas( _ ,i) =y;
+    neurons( _ ,i) =y;
   }
   //Datos listos para trabajar en matriz
 
-  NumericVector dist = distancia(neuronas, dato);
+  NumericVector range = calculateEuclideanDistance2Point(neurons, stimulus);
 
-  NumericVector::iterator it = std::min_element(dist.begin(), dist.end());
-  // we want the value so dereference
-  return it - dist.begin() + 1;
+  NumericVector::iterator it = std::min_element(range.begin(), range.end());
+
+  return it - range.begin() + 1;
 }

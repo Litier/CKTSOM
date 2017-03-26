@@ -5,34 +5,34 @@
 
 using namespace Rcpp;
 
-// myFunc
-Rcpp::DataFrame myFunc(int k, int h, float alfaMAyor, float AlfaMenor, int Rinicial, int Rfinal, int nIteraciones, Rcpp::List lst, Rcpp::CharacterVector Names);
-RcppExport SEXP BKTSOM_myFunc(SEXP kSEXP, SEXP hSEXP, SEXP alfaMAyorSEXP, SEXP AlfaMenorSEXP, SEXP RinicialSEXP, SEXP RfinalSEXP, SEXP nIteracionesSEXP, SEXP lstSEXP, SEXP NamesSEXP) {
+// train_Rcpp
+Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode, int treeHeight, float initialLearningRate, float finalLearningRate, int initialRadius, int finalRadius, int iterations, Rcpp::List lst, Rcpp::CharacterVector Names);
+RcppExport SEXP BKTSOM_train_Rcpp(SEXP numberOfChildrenperNodeSEXP, SEXP treeHeightSEXP, SEXP initialLearningRateSEXP, SEXP finalLearningRateSEXP, SEXP initialRadiusSEXP, SEXP finalRadiusSEXP, SEXP iterationsSEXP, SEXP lstSEXP, SEXP NamesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    Rcpp::traits::input_parameter< int >::type h(hSEXP);
-    Rcpp::traits::input_parameter< float >::type alfaMAyor(alfaMAyorSEXP);
-    Rcpp::traits::input_parameter< float >::type AlfaMenor(AlfaMenorSEXP);
-    Rcpp::traits::input_parameter< int >::type Rinicial(RinicialSEXP);
-    Rcpp::traits::input_parameter< int >::type Rfinal(RfinalSEXP);
-    Rcpp::traits::input_parameter< int >::type nIteraciones(nIteracionesSEXP);
+    Rcpp::traits::input_parameter< int >::type numberOfChildrenperNode(numberOfChildrenperNodeSEXP);
+    Rcpp::traits::input_parameter< int >::type treeHeight(treeHeightSEXP);
+    Rcpp::traits::input_parameter< float >::type initialLearningRate(initialLearningRateSEXP);
+    Rcpp::traits::input_parameter< float >::type finalLearningRate(finalLearningRateSEXP);
+    Rcpp::traits::input_parameter< int >::type initialRadius(initialRadiusSEXP);
+    Rcpp::traits::input_parameter< int >::type finalRadius(finalRadiusSEXP);
+    Rcpp::traits::input_parameter< int >::type iterations(iterationsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type Names(NamesSEXP);
-    rcpp_result_gen = Rcpp::wrap(myFunc(k, h, alfaMAyor, AlfaMenor, Rinicial, Rfinal, nIteraciones, lst, Names));
+    rcpp_result_gen = Rcpp::wrap(train_Rcpp(numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names));
     return rcpp_result_gen;
 END_RCPP
 }
 // FindBMU
-int FindBMU(Rcpp::List listNeuronas, Rcpp::NumericVector dato);
-RcppExport SEXP BKTSOM_FindBMU(SEXP listNeuronasSEXP, SEXP datoSEXP) {
+int FindBMU(Rcpp::List listNeuron, Rcpp::NumericVector stimulus);
+RcppExport SEXP BKTSOM_FindBMU(SEXP listNeuronSEXP, SEXP stimulusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type listNeuronas(listNeuronasSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dato(datoSEXP);
-    rcpp_result_gen = Rcpp::wrap(FindBMU(listNeuronas, dato));
+    Rcpp::traits::input_parameter< Rcpp::List >::type listNeuron(listNeuronSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type stimulus(stimulusSEXP);
+    rcpp_result_gen = Rcpp::wrap(FindBMU(listNeuron, stimulus));
     return rcpp_result_gen;
 END_RCPP
 }
