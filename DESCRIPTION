@@ -1,7 +1,7 @@
 Package: BKTSOM
 Type: Package
 Title: Construction, training and visualization of Self-Organizing Trees
-Version: 0.1.0
+Version: 0.1.1
 Date:2017-01-25
 Author: César A. Astudillo <cesar dot astudillo at gmail>  and Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
 Maintainer: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
