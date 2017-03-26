@@ -30,87 +30,56 @@ install_github("Litier/BKTSOM")
 ###### Example 1
 
 ```R
+library(BKTSOM)
 library(ggplot2)
-#Initializing variables
-AdjacencyMatrix <- matrix(data = rep(0,49),nrow = 7)
-AdjacencyMatrix[2,1]<- 1
-AdjacencyMatrix[3,1]<- 1
-AdjacencyMatrix[4,2]<- 1
-AdjacencyMatrix[5,2]<- 1
-AdjacencyMatrix[6,3]<- 1      # 3 -- 6
+##################### EXAMPLE 1 : IRIS DATASET
+###parameters
+numberOfIterations <- 600000
+initialLearningRate <- 1
+finalLearningRate<- 0
+initialRadius <- 7
+finalRadius <- 1
+numberOfChildrenperNode <- 2
+treeHeight <- 3
 
-WeightMatrix <- matrix(runif(7, 1.0, 5.5))
-WeightMatrix <- cbind(WeightMatrix,runif(7, 3.0, 9.5))
-WeightMatrix <- cbind(WeightMatrix,runif(7, 0.0, 9.5))
-WeightMatrix <- cbind(WeightMatrix,runif(7, 7.0, 8.5))
-WeightDF <- data.frame(WeightMatrix)
+##training phase
+data(iris)
+data<-iris[-5] ## load a dataset
+ti <- proc.time() # start watch
+neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data)
+tf <-proc.time()    # stop watch
+tf-ti #print execution time
 
-ClusterVectors <- c(0,1,1,1,2,2,1)
-
-#Grafico
-BKTSOM::graficar(WeightDF,2,AdjacencyMatrix,ClusterVectors)
+##visualization phase
+graficar(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ```
 ###### Example 2
 ```R
+library(BKTSOM)
 library(ggplot2)
-#Initializing variables
-AdjacencyMatrix <- matrix(data = rep(0,169),nrow = 13)
-AdjacencyMatrix[2,1]<- 1
-AdjacencyMatrix[3,1]<- 1
-AdjacencyMatrix[4,1]<- 1
-AdjacencyMatrix[5,2]<- 1
-AdjacencyMatrix[6,2]<- 1
-AdjacencyMatrix[7,2]<- 1
-AdjacencyMatrix[8,3]<- 1      # 3 -- 6
-AdjacencyMatrix[9,3]<- 1
-AdjacencyMatrix[10,4]<- 1
-WeightMatrix <- matrix(runif(13, 1.0, 5.5))
-WeightMatrix <- cbind(WeightMatrix,runif(13, 3.0, 9.5))
-WeightMatrix <- cbind(WeightMatrix,runif(13, 0.0, 9.5))
-WeightMatrix <- cbind(WeightMatrix,runif(13, 7.0, 8.5))
-WeightDF <- data.frame(WeightMatrix)
-ClusterVectors <- c(0,1,1,1,2,2,2,3,3,3,4,4,4)
 
-#the plot
-BKTSOM::graficar(WeightDF,3,AdjacencyMatrix,ClusterVectors)
+##################### EXAMPLE 2 : LIFECYLCE DATA
+###parameters
+numberOfIterations <- 600000
+initialLearningRate <- 1
+finalLearningRate<- 0
+initialRadius <- 7
+finalRadius <- 1
+numberOfChildrenperNode <- 2
+treeHeight <- 3
+
+##training phase
+data(LifeCycleSavings)
+data<-LifeCycleSavings ## load a dataset
+##remove outliers
+data<-data[!(data$ddpi>10 | data$sr>20),]
+
+ti <- proc.time() # start watch
+neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data)
+tf <-proc.time()    # stop watch
+tf-ti #print execution time
+
+##visualization phase
+graficar(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ```
-###### Example 3. plotting the graph
-```R
-library(ggplot2)
-dataIris <-  iris
-dataIris <- dataIris[,-5]
-names (dataIris) <-c("X1","X2","X3","X4")
-vectorClustersDatos <- c(rep(1,25))
-vectorClustersDatos <- c(vectorClustersDatos ,rep(2,45))
-vectorClustersDatos <- c(vectorClustersDatos ,rep(3,30))
 
-AdjacencyMatrix <- matrix(data = rep(0,49),nrow = 7)
-AdjacencyMatrix[2,1]<- 1
-AdjacencyMatrix[3,1]<- 1
-AdjacencyMatrix[4,2]<- 1
-AdjacencyMatrix[5,2]<- 1
-AdjacencyMatrix[6,3]<- 1      # 3 -- 6
-
-MatrixWeights <- matrix(runif(7, 1.0, 5.5))
-MatrixWeights <- cbind(MatrixWeights,runif(7, 3.0, 9.5))
-MatrixWeights <- cbind(MatrixWeights,runif(7, 0.0, 9.5))
-MatrixWeights <- cbind(MatrixWeights,runif(7, 7.0, 8.5))
-dataDF <- data.frame(MatrixWeights)
-#Inicializa las neuronas copiando los datos de forma aleatoria
-for(i in 1:length(dataDF[,1])){
-  n<- ceiling(runif(1,1,150))
-  dataDF[i,]  <- dataIris[n,]
-}
-#Define el grupo de cada neurona
-ClusterVectors <- c(1,2,2,2,3,2,3)
-#Asigna el BMU a cada dato
-for (i in 1:150){
-  n<- BKTSOM::findBMU(dataIris[i,],dataDF)
-  ClusterVectorsDF[i] <- vectorClusters[n]
-}
-#Grafica
-
-#BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix)
-#BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix,ClusterVectors)
-BKTSOM::graficarGrafo(dataIris,dataDF,AdjacencyMatrix,ClusterVectors,ClusterVectorsDF)
-```
