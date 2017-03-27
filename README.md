@@ -45,9 +45,9 @@ treeHeight <- 3
 ##training phase
 data(iris)
 data<-iris[-5] ## load a dataset
-ti <- proc.time() # start watch
+ti <- proc.time() # start timer
 neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data)
-tf <-proc.time()    # stop watch
+tf <-proc.time()    # stop timer
 tf-ti #print execution time
 
 ##visualization phase
@@ -74,9 +74,9 @@ data<-LifeCycleSavings ## load a dataset
 ##remove outliers
 data<-data[!(data$ddpi>10 | data$sr>20),]
 
-ti <- proc.time() # start watch
+ti <- proc.time() # start timer
 neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data)
-tf <-proc.time()    # stop watch
+tf <-proc.time()    # stop timer
 tf-ti #print execution time
 
 ##visualization phase
