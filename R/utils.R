@@ -1,4 +1,4 @@
-
+source("r/RcppExports.R")
 #' train entrena la red neuronal usando una topologia de arbol
 #'
 #' @param numberOfChildrenperNode A integer number
