@@ -8,6 +8,7 @@ Maintainer: Javier Aros Mendoza <jaros11@alumnos.utalca.cl>
 Description: a tool for defining, training and visualizing self-organizing trees. The training phase is based on the well known self-organizing maps (SOM) algorithm, a type of neural network that performs unsupervised learning, grouping multidimensional data. The graphic Visualization is focused on a scatterplot the shows the data being analized as long as the tree, showing the neurons (nodes) and the connections
 License: GPL v3
 LazyData: TRUE
+Encoding: UTF-8
 Imports:
     Rcpp (>= 0.12.8)
 LinkingTo:
