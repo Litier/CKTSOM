@@ -30,7 +30,7 @@ install_github("Litier/BKTSOM")
 ###### Example 1
 
 ```R
-library(BKTSOM)
+library(CKTSOM)
 library(ggplot2)
 ##################### EXAMPLE 1 : IRIS DATASET
 ###parameters
@@ -55,7 +55,7 @@ graficar(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ```
 ###### Example 2
 ```R
-library(BKTSOM)
+library(CKTSOM)
 library(ggplot2)
 
 ##################### EXAMPLE 2 : LIFECYLCE DATA
