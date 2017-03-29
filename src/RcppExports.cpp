@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // train_Rcpp
 Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode, int treeHeight, float initialLearningRate, float finalLearningRate, int initialRadius, int finalRadius, int iterations, Rcpp::List lst, Rcpp::CharacterVector Names);
-RcppExport SEXP BKTSOM_train_Rcpp(SEXP numberOfChildrenperNodeSEXP, SEXP treeHeightSEXP, SEXP initialLearningRateSEXP, SEXP finalLearningRateSEXP, SEXP initialRadiusSEXP, SEXP finalRadiusSEXP, SEXP iterationsSEXP, SEXP lstSEXP, SEXP NamesSEXP) {
+RcppExport SEXP CKTSOM_train_Rcpp(SEXP numberOfChildrenperNodeSEXP, SEXP treeHeightSEXP, SEXP initialLearningRateSEXP, SEXP finalLearningRateSEXP, SEXP initialRadiusSEXP, SEXP finalRadiusSEXP, SEXP iterationsSEXP, SEXP lstSEXP, SEXP NamesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -26,7 +26,7 @@ END_RCPP
 }
 // FindBMU
 int FindBMU(Rcpp::List listNeuron, Rcpp::NumericVector stimulus);
-RcppExport SEXP BKTSOM_FindBMU(SEXP listNeuronSEXP, SEXP stimulusSEXP) {
+RcppExport SEXP CKTSOM_FindBMU(SEXP listNeuronSEXP, SEXP stimulusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -38,7 +38,7 @@ END_RCPP
 }
 // rcpp_hello
 List rcpp_hello();
-RcppExport SEXP BKTSOM_rcpp_hello() {
+RcppExport SEXP CKTSOM_rcpp_hello() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

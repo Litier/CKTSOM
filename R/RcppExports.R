@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 train_Rcpp <- function(numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names = as.character( c())) {
-    .Call('BKTSOM_train_Rcpp', PACKAGE = 'BKTSOM', numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names)
+    .Call('CKTSOM_train_Rcpp', PACKAGE = 'CKTSOM', numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names)
 }
 
 FindBMU <- function(listNeuron, stimulus) {
-    .Call('BKTSOM_FindBMU', PACKAGE = 'BKTSOM', listNeuron, stimulus)
+    .Call('CKTSOM_FindBMU', PACKAGE = 'CKTSOM', listNeuron, stimulus)
 }
 
 rcpp_hello <- function() {
-    .Call('BKTSOM_rcpp_hello', PACKAGE = 'BKTSOM')
+    .Call('CKTSOM_rcpp_hello', PACKAGE = 'CKTSOM')
 }
 
