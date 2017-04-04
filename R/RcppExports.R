@@ -5,11 +5,11 @@ train_Rcpp <- function(numberOfChildrenperNode, treeHeight, initialLearningRate,
     .Call('CKTSOM_train_Rcpp', PACKAGE = 'CKTSOM', numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names)
 }
 
-FindBMU <- function(listNeuron, stimulus) {
-    .Call('CKTSOM_FindBMU', PACKAGE = 'CKTSOM', listNeuron, stimulus)
+findBMU_Rcpp <- function(dataNeuron, dataStimulus) {
+    .Call('CKTSOM_findBMU_Rcpp', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus)
 }
 
-rcpp_hello <- function() {
-    .Call('CKTSOM_rcpp_hello', PACKAGE = 'CKTSOM')
+testDFtoNM <- function(x) {
+    .Call('CKTSOM_testDFtoNM', PACKAGE = 'CKTSOM', x)
 }
 

@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 
 //determina cuantas neurons hay en el arbol
-int lengthNeurons(int numberOfChildrenperNode, int treeHeight){
+int calculateNumberOfNeurons(int numberOfChildrenperNode, int treeHeight){
   int sum = 0 ;
   for (int i = 0 ; i <= treeHeight ; i++ ){
     sum = sum + pow(numberOfChildrenperNode,i);
@@ -25,9 +25,10 @@ Rcpp::NumericVector findChildren(int neuron,int  numberOfChildrenperNode){
 }
 
 //obtiene el padre de una neurona
+//N - (N%k)
 int findFather(int neuron,int numberOfChildrenperNode){
   neuron++;  //aumento el numero para tener la lista que empiesa 1
-  int father = (neuron+numberOfChildrenperNode-2)/numberOfChildrenperNode;
+  int father = (neuron + numberOfChildrenperNode - 2 )/numberOfChildrenperNode;
   return father-1;  //disminulle el numero para una lista que empiesa en 0
 }
 
@@ -147,7 +148,7 @@ Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode,int treeHeight,float init
                          Rcpp::CharacterVector Names = Rcpp::CharacterVector::create()) {
 
   int columnLength = lst.size();
-  int neuronsSize = lengthNeurons(numberOfChildrenperNode,treeHeight);
+  int neuronsSize = calculateNumberOfNeurons(numberOfChildrenperNode,treeHeight);
   SEXP ll = lst[0];
   Rcpp::NumericVector y(ll);
   int dataSize = y.size();
@@ -250,25 +251,25 @@ Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode,int treeHeight,float init
 //metodos para topologia de grafo
 //busca el BMU entre todas las neuronas
 // [[Rcpp::export]]
-int FindBMU(Rcpp::List listNeuron,Rcpp::NumericVector stimulus){
-  int columnLength = listNeuron.size();
-  int dataSize = 0;
-  SEXP ll = listNeuron[0];
-  Rcpp::NumericVector y(ll);
-  dataSize = y.size();
+int findBMU_Rcpp(DataFrame dataNeuron,DataFrame dataStimulus){
 
+  Rcpp::NumericMatrix neurons = internal::convert_using_rfunction(dataNeuron, "as.matrix");
+  NumericMatrix stimulusMatrix = internal::convert_using_rfunction(dataStimulus, "as.matrix");
+  NumericVector stimulusVector = stimulusMatrix(0,_);
 
-  Rcpp::NumericMatrix neurons(dataSize,columnLength);
-  for (int i = 0; i < columnLength; i++) {
-    SEXP ll = listNeuron[i];
-    Rcpp::NumericVector y(ll);
-    neurons( _ ,i) =y;
-  }
   //Datos listos para trabajar en matriz
 
-  NumericVector range = calculateEuclideanDistance2Point(neurons, stimulus);
+  NumericVector range = calculateEuclideanDistance2Point(neurons, stimulusVector);
 
   NumericVector::iterator it = std::min_element(range.begin(), range.end());
 
   return it - range.begin() + 1;
+}
+
+
+//[[Rcpp::export]]
+NumericVector testDFtoNM(DataFrame x) {
+  NumericMatrix y = internal::convert_using_rfunction(x, "as.matrix");
+  NumericVector aa = y(1,_);
+  return aa;
 }

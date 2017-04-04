@@ -24,25 +24,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// FindBMU
-int FindBMU(Rcpp::List listNeuron, Rcpp::NumericVector stimulus);
-RcppExport SEXP CKTSOM_FindBMU(SEXP listNeuronSEXP, SEXP stimulusSEXP) {
+// findBMU_Rcpp
+int findBMU_Rcpp(DataFrame dataNeuron, DataFrame dataStimulus);
+RcppExport SEXP CKTSOM_findBMU_Rcpp(SEXP dataNeuronSEXP, SEXP dataStimulusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type listNeuron(listNeuronSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type stimulus(stimulusSEXP);
-    rcpp_result_gen = Rcpp::wrap(FindBMU(listNeuron, stimulus));
+    Rcpp::traits::input_parameter< DataFrame >::type dataNeuron(dataNeuronSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type dataStimulus(dataStimulusSEXP);
+    rcpp_result_gen = Rcpp::wrap(findBMU_Rcpp(dataNeuron, dataStimulus));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP CKTSOM_rcpp_hello() {
+// testDFtoNM
+NumericVector testDFtoNM(DataFrame x);
+RcppExport SEXP CKTSOM_testDFtoNM(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
+    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(testDFtoNM(x));
     return rcpp_result_gen;
 END_RCPP
 }
