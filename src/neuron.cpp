@@ -3,7 +3,9 @@
 using namespace Rcpp;
 
 
-//determina cuantas neurons hay en el arbol
+/**
+* Compute the number of neurons in the tree considering the depth of the tree as well as the number of children per node.
+*/
 int calculateNumberOfNeurons(int numberOfChildrenperNode, int treeHeight){
   int sum = 0 ;
   for (int i = 0 ; i <= treeHeight ; i++ ){
@@ -12,13 +14,16 @@ int calculateNumberOfNeurons(int numberOfChildrenperNode, int treeHeight){
   return sum;
 }
 
-//genera un vector de los hijos de una neurona
+/**
+* Genera un vector de los hijos de una neurona.
+* TODO: explicar
+*/
 Rcpp::NumericVector findChildren(int neuron,int  numberOfChildrenperNode){
   Rcpp::NumericVector children(numberOfChildrenperNode);
   neuron++;  //aumento el numero para tener la lista que empiesa 1
   int n = 0;
   for (int i = 1; i <=numberOfChildrenperNode ;i++){
-    children[numberOfChildrenperNode -i] = numberOfChildrenperNode*neuron+n;  //disminulle el numero para una lista que empiesa en 0
+    children[numberOfChildrenperNode -i] = numberOfChildrenperNode*neuron+n;  //disminuye el numero para una lista que empieza en 0
     n = n -1;
   }
   return children;
