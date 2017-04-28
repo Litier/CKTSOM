@@ -278,3 +278,8 @@ NumericVector testDFtoNM(DataFrame x) {
   NumericVector aa = y(1,_);
   return aa;
 }
+
+// [[Rcpp::export]]
+void set_seed(int seed){
+    srand(seed);
+  }

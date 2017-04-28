@@ -13,3 +13,7 @@ testDFtoNM <- function(x) {
     .Call('CKTSOM_testDFtoNM', PACKAGE = 'CKTSOM', x)
 }
 
+set_seed <- function(seed) {
+    invisible(.Call('CKTSOM_set_seed', PACKAGE = 'CKTSOM', seed))
+}
+

@@ -47,3 +47,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// set_seed
+void set_seed(int seed);
+RcppExport SEXP CKTSOM_set_seed(SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    set_seed(seed);
+    return R_NilValue;
+END_RCPP
+}
