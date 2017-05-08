@@ -1,5 +1,8 @@
 #include <Rcpp.h>
 #include <string>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>
+
 using namespace Rcpp;
 
 
@@ -257,29 +260,63 @@ Rcpp::DataFrame train_Rcpp(int numberOfChildrenperNode,int treeHeight,float init
 //busca el BMU entre todas las neuronas
 // [[Rcpp::export]]
 int findBMU_Rcpp(DataFrame dataNeuron,DataFrame dataStimulus){
-
   Rcpp::NumericMatrix neurons = internal::convert_using_rfunction(dataNeuron, "as.matrix");
   NumericMatrix stimulusMatrix = internal::convert_using_rfunction(dataStimulus, "as.matrix");
   NumericVector stimulusVector = stimulusMatrix(0,_);
-
   //Datos listos para trabajar en matriz
-
-  NumericVector range = calculateEuclideanDistance2Point(neurons, stimulusVector);
-
+  NumericVector range = distance(neurons, stimulusVector);
   NumericVector::iterator it = std::min_element(range.begin(), range.end());
 
   return it - range.begin() + 1;
-}
-
-
-//[[Rcpp::export]]
-NumericVector testDFtoNM(DataFrame x) {
-  NumericMatrix y = internal::convert_using_rfunction(x, "as.matrix");
-  NumericVector aa = y(1,_);
-  return aa;
 }
 
 // [[Rcpp::export]]
 void set_seed(int seed){
     srand(seed);
   }
+
+
+
+// [[Rcpp::export]]
+NumericVector findBmuAndDistance(DataFrame dataNeuron,DataFrame dataStimulus,int numberOfChildrenperNode, int treeHeight){
+  NumericVector result(2);
+
+  NumericMatrix dataNeuronMatrix = internal::convert_using_rfunction(dataNeuron, "as.matrix");
+
+  NumericMatrix dataStimulusMatrix = internal::convert_using_rfunction(dataStimulus, "as.matrix");
+  NumericVector stimulus = dataStimulusMatrix(0,_);
+  //find BMU
+  result[0] = FindBMU_tree( stimulus,dataNeuronMatrix, numberOfChildrenperNode, treeHeight);
+
+  //Distance to BMU
+  result[1] = calculateEuclideanDistance2Point (dataNeuronMatrix(result[0],_),stimulus);
+  return result;
+}
+
+
+/*
+ // [[Rcpp::export]]
+ int FindBMU_tree(DataFrame dataNeuron,DataFrame dataStimulus,int numberOfChildrenperNode, int treeHeight){
+ Rcpp::NumericMatrix neurons = internal::convert_using_rfunction(dataNeuron, "as.matrix");
+ NumericMatrix stimulusMatrix = internal::convert_using_rfunction(dataStimulus, "as.matrix");
+ NumericVector stimulus = stimulusMatrix(0,_);
+
+ int bmu = FindBMU_tree( stimulus, neurons, numberOfChildrenperNode,  treeHeight);
+ return bmu;
+ }
+
+
+
+ // [[Rcpp::export]]
+ float calculateEuclideanDistance(DataFrame point1data,DataFrame point2data ){
+ NumericMatrix point1Matrix = internal::convert_using_rfunction(point1data, "as.matrix");
+ NumericVector point1 = point1Matrix(0,_);
+
+ NumericMatrix point2Matrix = internal::convert_using_rfunction(point2data, "as.matrix");
+ NumericVector point2 = point2Matrix(0,_);
+
+ return calculateEuclideanDistance2Point ( point1, point2 );
+ }
+*/
+
+

@@ -9,11 +9,11 @@ findBMU_Rcpp <- function(dataNeuron, dataStimulus) {
     .Call('CKTSOM_findBMU_Rcpp', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus)
 }
 
-testDFtoNM <- function(x) {
-    .Call('CKTSOM_testDFtoNM', PACKAGE = 'CKTSOM', x)
-}
-
 set_seed <- function(seed) {
     invisible(.Call('CKTSOM_set_seed', PACKAGE = 'CKTSOM', seed))
+}
+
+findBmuAndDistance <- function(dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight) {
+    .Call('CKTSOM_findBmuAndDistance', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight)
 }
 

@@ -1,4 +1,4 @@
-prueba <- function(data,numberOfIterations = 600000,initialLearningRate = 1, finalLearningRate = 0,
+validate <- function(data,numberOfIterations = 600000,initialLearningRate = 1, finalLearningRate = 0,
                    initialRadius = 7,finalRadius = 1,numberOfChildrenperNode = 2,
                    treeHeight = 3,trainingRatio = 0.66){
 
@@ -14,27 +14,28 @@ prueba <- function(data,numberOfIterations = 600000,initialLearningRate = 1, fin
     #########
 
     neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, training)
-    clusterVector<- c(1:15)
+    clusterVector<- c(1:length(neurons[,1]))
 
     ##Calculate the group of each data
-    TrainingDataBMU<- calculateBMUForData(training,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
-    TrainingDistancias<- c(1:length(training[,1]))
-
+    ####################Training
+    trainingResult <-matrix(ncol = 2,nrow = length(training[,1]))
+    colnames(trainingResult) <- c("trainingDataBMU","trainingDistancias")
     for (i in 1:length(training[,1])) {
-      TrainingDistancias[i] <- distancia_R(neurons[TrainingDataBMU[i],],training[i,])
+      stimulus <- training[i,]
+      trainingResult[i,]<-calculateBMUandDistance(neurons,stimulus, numberOfChildrenperNode, treeHeight)
     }
-    ###test
-    ##Calculate the group of each data
-    TestDataBMU<- calculateBMUForData(test,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
-    TestDistancias<- c(1:length(test[,1]))
 
+
+    ####################Test
+    testResult <-matrix(ncol = 2,nrow = length(test[,1]))
+    colnames(testResult) <- c("testDataBMU","testDistancias")
     for (i in 1:length(test[,1])) {
-      TestDistancias[i] <- distancia_R(neurons[TestDataBMU[i],],test[i,])
+      stimulus <- test[i,]
+      testResult[i,]<-calculateBMUandDistance(neurons,stimulus, numberOfChildrenperNode, treeHeight)
     }
 
-
-    training <- data.frame(training,TrainingDataBMU,TrainingDistancias)
-    test <- data.frame(test,TestDataBMU,TestDistancias)
+    training <- data.frame(training,trainingResult)
+    test <- data.frame(test,testResult)
 
 
     return (c(training,test,neurons))

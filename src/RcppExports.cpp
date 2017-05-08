@@ -36,17 +36,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// testDFtoNM
-NumericVector testDFtoNM(DataFrame x);
-RcppExport SEXP CKTSOM_testDFtoNM(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(testDFtoNM(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // set_seed
 void set_seed(int seed);
 RcppExport SEXP CKTSOM_set_seed(SEXP seedSEXP) {
@@ -55,5 +44,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
     set_seed(seed);
     return R_NilValue;
+END_RCPP
+}
+// findBmuAndDistance
+NumericVector findBmuAndDistance(DataFrame dataNeuron, DataFrame dataStimulus, int numberOfChildrenperNode, int treeHeight);
+RcppExport SEXP CKTSOM_findBmuAndDistance(SEXP dataNeuronSEXP, SEXP dataStimulusSEXP, SEXP numberOfChildrenperNodeSEXP, SEXP treeHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type dataNeuron(dataNeuronSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type dataStimulus(dataStimulusSEXP);
+    Rcpp::traits::input_parameter< int >::type numberOfChildrenperNode(numberOfChildrenperNodeSEXP);
+    Rcpp::traits::input_parameter< int >::type treeHeight(treeHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(findBmuAndDistance(dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight));
+    return rcpp_result_gen;
 END_RCPP
 }

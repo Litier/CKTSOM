@@ -1,18 +1,7 @@
 
 library(ggplot2)
 
-miniLista <- function(padre,k,matriz){
-  hijos <- buscaHijos(padre ,k)
-  nimil<- c()
-  for (i in hijos){
-    if( matriz[i,padre] == 1){
-      nimil <- c(nimil,padre,i)
-    }
 
-  }
-
-  return(nimil)
-}
 
 
 

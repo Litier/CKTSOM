@@ -44,47 +44,7 @@ findBMU <- function(listNeuron,stimulus){
   return(BMU)
 }
 
-################## borrar, pasar a c++
-##### buscar prototipo mas sercano
-findBMU_R <- function(dato,prototipos){
-  d <-distancia_R(prototipos,dato)
-  dminima <-min(d)
-  index <- match(dminima,d)
 
-  return (index)
-}
-
-
-
-#### calcula la distancia entre 2 puntos
-calculaDistancia_R <- function(punto1,punto2,datos){
-  tipoDeDatos<-sapply(datos, class)
-  lista<-1:length(datos)
-  lista[tipoDeDatos == "numeric"]<- 1
-  lista[tipoDeDatos != "numeric"]<- 0
-  restaPArcial <- c()
-  for (i in 1:length(datos)) {
-    if(lista[i]==1){
-      factorResta <- punto1[i] - punto2[i]
-      numero <- factorResta[1,]
-      numero <- numero^2
-      restaPArcial <-c(restaPArcial,numero)
-    }
-  }
-  disc <- sum(restaPArcial)
-  d <- sqrt(disc)
-  return(d)
-}
-
-
-##distancia hasta los prototipos
-distancia_R <- function(prototipos,puntofijo){
-  resultado <- c()
-  for (i in 1:length(prototipos[,1])){
-    resultado <- c(resultado,calculaDistancia_R(puntofijo,prototipos[i,],prototipos))
-  }
-  return(resultado)
-}
 
 ## el BMU para cada dato del data set
 calculateBMUForData <- function(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight) {
@@ -101,3 +61,27 @@ calculateBMUForData <- function(data,neurons,clusterVector,numberOfChildrenperNo
   return(dataBMU)
 }
 
+"
+FindBMU_tree_C <- function(dataNeuron,dataStimulus,numberOfChildrenperNode,treeHeight){
+  bmu <- FindBMU_tree( dataNeuron, dataStimulus, numberOfChildrenperNode,  treeHeight)
+  return(bmu + 1)
+}
+"
+
+
+#point1 , point2::Data.Frame
+calculateDistance <- function(point1, point2){
+   return (calculateEuclideanDistance (point1[1,],point2[1,] ))
+}
+
+setSeed <- function(semilla=123){
+  set_seed(semilla) ## c++
+  set.seed(semilla) ## R
+}
+
+
+calculateBMUandDistance <- function(dataNeuron,dataStimulus,numberOfChildrenperNode,treeHeight){
+  result <- findBmuAndDistance(dataNeuron,dataStimulus,numberOfChildrenperNode,treeHeight)
+  result[1] <- result[1] + 1
+  return(result)
+}
