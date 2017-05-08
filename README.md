@@ -139,7 +139,7 @@ neurons <- data.frame(result[(length(result)-length(data)+1):(length(result))])
 ###  Training  ###
 ##################
 drop <- c("trainingDataBMU","trainingDistancias")
-data = training[,!(names(training) %in% drop)]
+data <- training[,!(names(training) %in% drop)]
 ###   training plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###   plot  (8 cluster)
@@ -168,7 +168,7 @@ clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)
 ###    Test    ###
 ##################
 drop <- c("testDataBMU","testDistancias")
-data = test[,!(names(test) %in% drop)]
+data <- test[,!(names(test) %in% drop)]
 ### Test plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###  plot  (8 cluster)
