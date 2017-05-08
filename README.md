@@ -32,6 +32,9 @@ install_github("Litier/CKTSOM")
 ```R
 library(CKTSOM)
 library(ggplot2)
+
+#set SEED
+#setSeed(147)
 ##################### EXAMPLE 1 : IRIS DATASET
 ###parameters
 numberOfIterations <- 600000
@@ -57,7 +60,7 @@ clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plo
 
 ##Manual grouping of neurons
 clusterVector <-rep(0,15)
-clusterVector[c(1:7)]<- 2
+clusterVector[c(1:7)]<- 1
 clusterVector[c(8:9)]<- 3
 clusterVector[c(10:11)]<- 4
 clusterVector[c(12:13)]<- 5
@@ -97,7 +100,7 @@ tf <-proc.time()    # stop timer
 tf-ti #print execution time
 
 ##visualization phase
-graficar(data,neurons,numberOfChildrenperNode) #plot the scatter plot
+clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ```
 ##### Validation
 ```R
@@ -119,7 +122,7 @@ treeHeight <- 3
 data(iris)
 data<-iris[-5] ## load a dataset
 ##Execution algorithm
-result <- prueba(data = data)
+result <- validate(data = data)
 #using parameters for training
 #result <- prueba(data = data,numberOfIterations = numberOfIterations,initialLearningRate = initialLearningRate,finalLearningRate = finalLearningRate,initialRadius = initialRadius,finalRadius = finalRadius,numberOfChildrenperNode = numberOfChildrenperNode, treeHeight = treeHeight,trainingRatio = 0.66)
 
@@ -135,14 +138,15 @@ neurons <- data.frame(result[(length(result)-length(data)+1):(length(result))])
 ##################
 ###  Training  ###
 ##################
+drop <- c("trainingDataBMU","trainingDistancias")
+data = training[,!(names(training) %in% drop)]
 ###   training plot
-data <- training[-(5:6)]
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###   plot  (8 cluster)
 clusterVector<- c(1:length(neurons[,1]))
 clusterVector[1:7] <- 1
 data <- training[-(5:6)]
-dataBMU<- c(training$TrainingDataBMU)
+dataBMU<- c(training$trainingDataBMU)
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 ###  plot  (4 cluster)
 dataBMU[dataBMU == 15 ] <- 14
@@ -163,14 +167,15 @@ clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)
 ##################
 ###    Test    ###
 ##################
+drop <- c("testDataBMU","testDistancias")
+data = test[,!(names(test) %in% drop)]
 ### Test plot
-data <- test[-(5:6)]
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###  plot  (8 cluster)
 clusterVector<- c(1:length(neurons[,1]))
 clusterVector[1:7] <- 1
 data <- test[-(5:6)]
-dataBMU<- c(test$TestDataBMU)
+dataBMU<- c(test$testDataBMU)
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU) #plot the scatter plot
 ###  plot  (4 cluster)
 dataBMU[dataBMU == 15 ] <- 14
