@@ -27,7 +27,7 @@ install_github("Litier/CKTSOM")
 
 #### Example of execution 
 
-###### Example 1
+##### Example 1
 
 ```R
 library(CKTSOM)
@@ -35,6 +35,8 @@ library(ggplot2)
 
 #set SEED
 #setSeed(147)
+
+
 ##################### EXAMPLE 1 : IRIS DATASET
 ###parameters
 numberOfIterations <- 600000
@@ -57,14 +59,14 @@ tf-ti #print execution time
 ##Display phase without grouping
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 
+###########
+#####################    visualization 2
+###########
 
-##Manual grouping of neurons
-clusterVector <-rep(0,15)
-clusterVector[c(1:7)]<- 1
-clusterVector[c(8:9)]<- 3
-clusterVector[c(10:11)]<- 4
-clusterVector[c(12:13)]<- 5
-clusterVector[c(14:15)]<- 6
+##Grouping of neurons
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+
 
 ##Calculate the group of each data
 dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
@@ -73,7 +75,53 @@ dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode
 ##Display phase with grouping
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)
 ```
-###### Example 2
+##### Example 3D: IRIS DATA
+```R
+library(CKTSOM)
+library("rgl")
+
+#set SEED
+#setSeed(147)
+
+
+##################### Example 3D: IRIS DATA
+###parameters
+numberOfIterations <- 600000
+initialLearningRate <- 1
+finalLearningRate<- 0
+initialRadius <- 7
+finalRadius <- 1
+numberOfChildrenperNode <- 2
+treeHeight <- 3
+
+##training phase
+data(iris)
+data<-iris[-5] ## load a dataset
+neurons <- train(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data)
+
+##Grouping of neurons
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+
+
+##Calculate the group of each data
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
+
+##visualization phase
+plot3d(data$Sepal.Length,data$Sepal.Width,data$Petal.Length,size = 5,col= dataBMU,axes = FALSE,xlab ="",ylab ="",zlab ="")
+points3d(neurons$Sepal.Length,neurons$Sepal.Width,neurons$Petal.Length,col=clusterVector,size = 7)
+for (i in c(1:(length(neurons[,1])  - numberOfChildrenperNode ** treeHeight))) {
+  mini <- miniLista(i,numberOfChildrenperNode)
+  lines3d(neurons$Sepal.Length[mini],neurons$Sepal.Width[mini],neurons$Petal.Length[mini],size = 5,color="black")
+}
+
+
+##move plot
+movie3d(spin3d(axis = c(0,0,1), rpm = 1), duration=120,  type = "png")
+```
+###### Result
+![Demo](https://s17.postimg.org/40lj0d5q7/CKTSOM.gif)
+##### Example 2:  LIFECYLCE DATA
 ```R
 library(CKTSOM)
 library(ggplot2)
@@ -101,6 +149,20 @@ tf-ti #print execution time
 
 ##visualization phase
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
+###########
+#####################    visualization 2
+###########
+##Manual grouping of neurons
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+
+
+##Calculate the group of each data
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
+
+##visualization phase
+##Display phase with grouping
+clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)
 ```
 ##### Validation
 ```R
@@ -124,7 +186,7 @@ data<-iris[-5] ## load a dataset
 ##Execution algorithm
 result <- validate(data = data)
 #using parameters for training
-#result <- prueba(data = data,numberOfIterations = numberOfIterations,initialLearningRate = initialLearningRate,finalLearningRate = finalLearningRate,initialRadius = initialRadius,finalRadius = finalRadius,numberOfChildrenperNode = numberOfChildrenperNode, treeHeight = treeHeight,trainingRatio = 0.66)
+#result <- validate(data = data,numberOfIterations = numberOfIterations,initialLearningRate = initialLearningRate,finalLearningRate = finalLearningRate,initialRadius = initialRadius,finalRadius = finalRadius,numberOfChildrenperNode = numberOfChildrenperNode, treeHeight = treeHeight,trainingRatio = 0.66)
 
 ####Split result
 ##Training
@@ -139,27 +201,21 @@ neurons <- data.frame(result[(length(result)-length(data)+1):(length(result))])
 ###  Training  ###
 ##################
 drop <- c("trainingDataBMU","trainingDistancias")
-data <- training[,!(names(training) %in% drop)]
+data = training[,!(names(training) %in% drop)]
 ###   training plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
+
+
 ###   plot  (8 cluster)
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-data <- training[-(5:6)]
+numberofGroups <- 8
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
 dataBMU<- c(training$trainingDataBMU)
+
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 ###  plot  (4 cluster)
-dataBMU[dataBMU == 15 ] <- 14
-dataBMU[dataBMU == 13 ] <- 12
-dataBMU[dataBMU == 11 ] <- 10
-dataBMU[dataBMU == 9 ] <- 8
-
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-clusterVector[c(8:9)]<- 8
-clusterVector[c(10:11)]<- 10
-clusterVector[c(12:13)]<- 12
-clusterVector[c(14:15)]<- 14
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
 
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 
@@ -168,27 +224,21 @@ clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)
 ###    Test    ###
 ##################
 drop <- c("testDataBMU","testDistancias")
-data <- test[,!(names(test) %in% drop)]
+data = test[,!(names(test) %in% drop)]
 ### Test plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###  plot  (8 cluster)
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-data <- test[-(5:6)]
+numberofGroups <- 8
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
 dataBMU<- c(test$testDataBMU)
+
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU) #plot the scatter plot
 ###  plot  (4 cluster)
-dataBMU[dataBMU == 15 ] <- 14
-dataBMU[dataBMU == 13 ] <- 12
-dataBMU[dataBMU == 11 ] <- 10
-dataBMU[dataBMU == 9 ] <- 8
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
 
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-clusterVector[c(8:9)]<- 8
-clusterVector[c(10:11)]<- 10
-clusterVector[c(12:13)]<- 12
-clusterVector[c(14:15)]<- 14
-
-clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU) #plot the scatter plot
+clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 ```
+
+
