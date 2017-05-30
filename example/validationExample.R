@@ -18,7 +18,7 @@ data<-iris[-5] ## load a dataset
 ##Execution algorithm
 result <- validate(data = data)
 #using parameters for training
-#result <- prueba(data = data,numberOfIterations = numberOfIterations,initialLearningRate = initialLearningRate,finalLearningRate = finalLearningRate,initialRadius = initialRadius,finalRadius = finalRadius,numberOfChildrenperNode = numberOfChildrenperNode, treeHeight = treeHeight,trainingRatio = 0.66)
+#result <- validate(data = data,numberOfIterations = numberOfIterations,initialLearningRate = initialLearningRate,finalLearningRate = finalLearningRate,initialRadius = initialRadius,finalRadius = finalRadius,numberOfChildrenperNode = numberOfChildrenperNode, treeHeight = treeHeight,trainingRatio = 0.66)
 
 ####Split result
 ##Training
@@ -36,24 +36,18 @@ drop <- c("trainingDataBMU","trainingDistancias")
 data = training[,!(names(training) %in% drop)]
 ###   training plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
+
+
 ###   plot  (8 cluster)
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-data <- training[-(5:6)]
+numberofGroups <- 8
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
 dataBMU<- c(training$trainingDataBMU)
+
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 ###  plot  (4 cluster)
-dataBMU[dataBMU == 15 ] <- 14
-dataBMU[dataBMU == 13 ] <- 12
-dataBMU[dataBMU == 11 ] <- 10
-dataBMU[dataBMU == 9 ] <- 8
-
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-clusterVector[c(8:9)]<- 8
-clusterVector[c(10:11)]<- 10
-clusterVector[c(12:13)]<- 12
-clusterVector[c(14:15)]<- 14
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
 
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot
 
@@ -66,22 +60,14 @@ data = test[,!(names(test) %in% drop)]
 ### Test plot
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
 ###  plot  (8 cluster)
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-data <- test[-(5:6)]
+numberofGroups <- 8
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
 dataBMU<- c(test$testDataBMU)
+
 clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU) #plot the scatter plot
 ###  plot  (4 cluster)
-dataBMU[dataBMU == 15 ] <- 14
-dataBMU[dataBMU == 13 ] <- 12
-dataBMU[dataBMU == 11 ] <- 10
-dataBMU[dataBMU == 9 ] <- 8
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
 
-clusterVector<- c(1:length(neurons[,1]))
-clusterVector[1:7] <- 1
-clusterVector[c(8:9)]<- 8
-clusterVector[c(10:11)]<- 10
-clusterVector[c(12:13)]<- 12
-clusterVector[c(14:15)]<- 14
-
-clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU) #plot the scatter plot
+clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)  #plot the scatter plot

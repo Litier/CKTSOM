@@ -24,3 +24,17 @@ tf-ti #print execution time
 
 ##visualization phase
 clusterVisualization(data,neurons,numberOfChildrenperNode) #plot the scatter plot
+###########
+#####################    visualization 2
+###########
+##Manual grouping of neurons
+numberofGroups <- 4
+clusterVector <- calculateGroups(numberofGroups,numberOfChildrenperNode,treeHeight)
+
+
+##Calculate the group of each data
+dataBMU<- calculateBMUForData(data,neurons,clusterVector,numberOfChildrenperNode,treeHeight)
+
+##visualization phase
+##Display phase with grouping
+clusterVisualization(data,neurons,numberOfChildrenperNode,clusterVector,dataBMU)

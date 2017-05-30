@@ -5,8 +5,8 @@ train_Rcpp <- function(numberOfChildrenperNode, treeHeight, initialLearningRate,
     .Call('CKTSOM_train_Rcpp', PACKAGE = 'CKTSOM', numberOfChildrenperNode, treeHeight, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names)
 }
 
-findBMU_Rcpp <- function(dataNeuron, dataStimulus) {
-    .Call('CKTSOM_findBMU_Rcpp', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus)
+findBMU <- function(dataNeuron, dataStimulus) {
+    .Call('CKTSOM_findBMU', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus)
 }
 
 set_seed <- function(seed) {
@@ -15,5 +15,9 @@ set_seed <- function(seed) {
 
 findBmuAndDistance <- function(dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight) {
     .Call('CKTSOM_findBmuAndDistance', PACKAGE = 'CKTSOM', dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight)
+}
+
+trainSOM_Rcpp <- function(numberColumn, numberRow, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names = as.character( c())) {
+    .Call('CKTSOM_trainSOM_Rcpp', PACKAGE = 'CKTSOM', numberColumn, numberRow, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names)
 }
 

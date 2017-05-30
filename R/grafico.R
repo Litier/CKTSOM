@@ -125,3 +125,37 @@ buscaHijos <- function(numero,k){
   }
   return(a)
 }
+
+######problemas con muchos plots y malla grande
+visualizationSOM <- function(datos,neuronas,numberColumn){
+  gg1 = makePairs(datos)
+  mega_iris = data.frame(gg1$all)
+
+  ggneurona = makePairs(neuronas)
+  mega_neuronas = data.frame(ggneurona$all)
+
+  #mega_neuronas = data.frame(ggneurona$all, Species=rep(iris$Species, length=nrow(ggneurona$all)))
+  # mi pairs plot
+  p <-ggplot(mega_iris, aes_string(x = "x", y = "y")) +
+    facet_grid(xvar ~ yvar, scales = "free") +
+    geom_point(colour = "red",size = 1)
+
+
+  ##marca las lineas, agregandole el color por nivel
+  for (i in 1:length(neuronas[,1])) {
+
+    for(j in 0:(length(mega_neuronas[,1]) /length(neuronas[,1])-1)){
+      if (i %% numberColumn != 0) {
+        p <- p + geom_path(data = mega_neuronas[c(i,i+1)+((length(neuronas[,1])*j)),])
+      }
+      #dibuja la linea de un punto a otro que se encuentra debajo de este "tomando la lista
+      #como si fuera una matriz"
+      if (i+ numberColumn <= length(neuronas[,1])) {
+        p <- p + geom_path(data = mega_neuronas[c(i,i+numberColumn)+((length(neuronas[,1])*j)),])
+      }
+    }
+  }
+  p <- p + geom_point(data = mega_neuronas,size = 1.5,shape = 19)
+
+  p
+}

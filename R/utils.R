@@ -39,6 +39,11 @@
 }
 
 
+ trainSOM <- function(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations, data){
+   neurons <- trainSOM_Rcpp(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations,as.list(data), names(data))
+   return(neurons)
+ }
+
 findBMU <- function(listNeuron,stimulus){
   BMU <- findBMU_Rcpp(listNeuron,stimulus)
   return(BMU)
@@ -85,3 +90,50 @@ calculateBMUandDistance <- function(dataNeuron,dataStimulus,numberOfChildrenperN
   result[1] <- result[1] + 1
   return(result)
 }
+
+calculateGroups <- function(numberOfGroups,numberOfChildrenperNode,treeHeight){
+  level <- 0
+  levelGroup <- numberOfChildrenperNode**level
+  while (levelGroup < numberOfGroups){
+    level<- level +1
+    levelGroup <- numberOfChildrenperNode**level
+  }
+  size <- calculateNumberOfNeurons(numberOfChildrenperNode,treeHeight)
+  id <- 1
+  groups <- rep(id,size)
+  ini <-numberOfChildrenperNode**level
+  end <-numberOfChildrenperNode **(level+1)
+
+  while (ini< end){
+    id <- id+1
+    groups[ini] <- id
+    groups <- marcarHijos(ini,numberOfChildrenperNode,treeHeight,size,groups )
+    ini <- ini +1
+  }
+
+
+  return(groups)
+}
+
+marcarHijos<- function(node,numberOfChildrenperNode,treeHeight,size,groups ){
+  hijos <- buscaHijos(node,numberOfChildrenperNode)
+  if(hijos[1]<size){
+    for(i in hijos){
+      groups[i] <- groups[node]
+      groups <- marcarHijos(i,numberOfChildrenperNode,treeHeight,size,groups )
+    }
+  }
+  return(groups)
+}
+
+calculateNumberOfNeurons<- function( numberOfChildrenperNode, treeHeight){
+  sum <- 0
+  for (i in c(0:treeHeight)) {
+    sum <- sum + numberOfChildrenperNode**i;
+  }
+  return(sum)
+}
+
+
+
+

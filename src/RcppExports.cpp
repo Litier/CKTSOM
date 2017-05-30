@@ -24,15 +24,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// findBMU_Rcpp
-int findBMU_Rcpp(DataFrame dataNeuron, DataFrame dataStimulus);
-RcppExport SEXP CKTSOM_findBMU_Rcpp(SEXP dataNeuronSEXP, SEXP dataStimulusSEXP) {
+// findBMU
+int findBMU(DataFrame dataNeuron, DataFrame dataStimulus);
+RcppExport SEXP CKTSOM_findBMU(SEXP dataNeuronSEXP, SEXP dataStimulusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type dataNeuron(dataNeuronSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type dataStimulus(dataStimulusSEXP);
-    rcpp_result_gen = Rcpp::wrap(findBMU_Rcpp(dataNeuron, dataStimulus));
+    rcpp_result_gen = Rcpp::wrap(findBMU(dataNeuron, dataStimulus));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,6 +57,25 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type numberOfChildrenperNode(numberOfChildrenperNodeSEXP);
     Rcpp::traits::input_parameter< int >::type treeHeight(treeHeightSEXP);
     rcpp_result_gen = Rcpp::wrap(findBmuAndDistance(dataNeuron, dataStimulus, numberOfChildrenperNode, treeHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
+// trainSOM_Rcpp
+Rcpp::DataFrame trainSOM_Rcpp(int numberColumn, int numberRow, float initialLearningRate, float finalLearningRate, int initialRadius, int finalRadius, int iterations, Rcpp::List lst, Rcpp::CharacterVector Names);
+RcppExport SEXP CKTSOM_trainSOM_Rcpp(SEXP numberColumnSEXP, SEXP numberRowSEXP, SEXP initialLearningRateSEXP, SEXP finalLearningRateSEXP, SEXP initialRadiusSEXP, SEXP finalRadiusSEXP, SEXP iterationsSEXP, SEXP lstSEXP, SEXP NamesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type numberColumn(numberColumnSEXP);
+    Rcpp::traits::input_parameter< int >::type numberRow(numberRowSEXP);
+    Rcpp::traits::input_parameter< float >::type initialLearningRate(initialLearningRateSEXP);
+    Rcpp::traits::input_parameter< float >::type finalLearningRate(finalLearningRateSEXP);
+    Rcpp::traits::input_parameter< int >::type initialRadius(initialRadiusSEXP);
+    Rcpp::traits::input_parameter< int >::type finalRadius(finalRadiusSEXP);
+    Rcpp::traits::input_parameter< int >::type iterations(iterationsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type Names(NamesSEXP);
+    rcpp_result_gen = Rcpp::wrap(trainSOM_Rcpp(numberColumn, numberRow, initialLearningRate, finalLearningRate, initialRadius, finalRadius, iterations, lst, Names));
     return rcpp_result_gen;
 END_RCPP
 }
