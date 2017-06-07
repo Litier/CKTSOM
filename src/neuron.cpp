@@ -90,6 +90,8 @@ NumericMatrix updateStructure(NumericMatrix neurons, NumericVector stimulus,
   return neurons;
 }
 
+
+
 //calcula la distancia eucludiana entre 2 puntos
 float calculateEuclideanDistance2Point (NumericVector point1,NumericVector point2 ){
   NumericVector resta(point1.size());
@@ -101,6 +103,16 @@ float calculateEuclideanDistance2Point (NumericVector point1,NumericVector point
   float disc = sum(resta);
   float d = sqrt(disc);
   return d;
+}
+
+// [[Rcpp::export]]
+float calculateEuclideanDistance (DataFrame point1,DataFrame point2){
+  NumericMatrix point1Matrix = internal::convert_using_rfunction(point1, "as.matrix");
+  NumericVector point1Vector = point1Matrix(0,_);
+
+  NumericMatrix point2Matrix = internal::convert_using_rfunction(point2, "as.matrix");
+  NumericVector point2Vector = point2Matrix(0,_);
+  return calculateEuclideanDistance2Point(point1Vector,point2Vector);
 }
 
 //calcula la distancia del estimulo a las neuronas

@@ -33,21 +33,17 @@
 #'
 #' ##visualization phase
 #' graficar(data,neurons,numberOfChildrenperNode) #plot the scatter plot
- train <- function(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data){
- neurons <- train_Rcpp(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations,as.list(data), names(data))
+train <- function(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations, data){
+  neurons <- train_Rcpp(numberOfChildrenperNode,treeHeight,initialLearningRate,finalLearningRate,initialRadius,finalRadius,numberOfIterations,as.list(data), names(data))
   return(neurons)
 }
 
 
- trainSOM <- function(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations, data){
-   neurons <- trainSOM_Rcpp(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations,as.list(data), names(data))
-   return(neurons)
- }
-
-findBMU <- function(listNeuron,stimulus){
-  BMU <- findBMU_Rcpp(listNeuron,stimulus)
-  return(BMU)
+trainSOM <- function(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations, data){
+  neurons <- trainSOM_Rcpp(numberColumn, numberRow, initialLearningRate, finalLearningRate,initialRadius, finalRadius,numberOfIterations,as.list(data), names(data))
+  return(neurons)
 }
+
 
 
 
@@ -57,7 +53,7 @@ calculateBMUForData <- function(data,neurons,clusterVector,numberOfChildrenperNo
   ini<-(length(neurons[,1])-(numberOfChildrenperNode**treeHeight)+1)
   fin<-length(neurons[,1])
   for (i in c(1:length(dataBMU))) {
-    dataBMU[i]<-findBMU_R(data[i,],neurons[c(ini:fin),])
+    dataBMU[i]<-findBMU(neurons[c(ini:fin),],data[i,])
   }
   dataBMU<- dataBMU+ini-1
   for(i in 1:length(dataBMU)){
@@ -68,15 +64,15 @@ calculateBMUForData <- function(data,neurons,clusterVector,numberOfChildrenperNo
 
 "
 FindBMU_tree_C <- function(dataNeuron,dataStimulus,numberOfChildrenperNode,treeHeight){
-  bmu <- FindBMU_tree( dataNeuron, dataStimulus, numberOfChildrenperNode,  treeHeight)
-  return(bmu + 1)
+bmu <- FindBMU_tree( dataNeuron, dataStimulus, numberOfChildrenperNode,  treeHeight)
+return(bmu + 1)
 }
 "
 
 
 #point1 , point2::Data.Frame
 calculateDistance <- function(point1, point2){
-   return (calculateEuclideanDistance (point1[1,],point2[1,] ))
+  return (calculateEuclideanDistance (point1[1,],point2[1,] ))
 }
 
 setSeed <- function(semilla=123){
@@ -101,16 +97,14 @@ calculateGroups <- function(numberOfGroups,numberOfChildrenperNode,treeHeight){
   size <- calculateNumberOfNeurons(numberOfChildrenperNode,treeHeight)
   id <- 1
   groups <- rep(id,size)
-  ini <-numberOfChildrenperNode**level
-  end <-numberOfChildrenperNode **(level+1)
 
-  while (ini< end){
+  ini <- min(buscaHijos(level,numberOfChildrenperNode))
+  fin <- ini + numberOfChildrenperNode ** (level) -1
+  for(i in c(ini:fin)){
     id <- id+1
-    groups[ini] <- id
-    groups <- marcarHijos(ini,numberOfChildrenperNode,treeHeight,size,groups )
-    ini <- ini +1
+    groups[i] <- id
+    groups <- marcarHijos(i,numberOfChildrenperNode,treeHeight,size,groups )
   }
-
 
   return(groups)
 }
@@ -134,6 +128,27 @@ calculateNumberOfNeurons<- function( numberOfChildrenperNode, treeHeight){
   return(sum)
 }
 
+getOutlayers <- function(neurons,data ,numberOfChildrenperNode,treeHeight){
+  clusterVector<- c(1:length(neurons[,1]))
+  ## calculate the bmu and distance for each data
+  result <-matrix(ncol = 2,nrow = length(data[,1]))
+  for (i in 1:length(data[,1])) {
+    stimulus <- data[i,]
+    result[i,]<-calculateBMUandDistance(neurons,stimulus, numberOfChildrenperNode, treeHeight)
+  }
+  ## calculate mu and sigma
+  ##media (mu)
+  media <- mean(result[,2])
+  #desviacion estandar (o desviación típica)  (sigma)
+  desviacionEstandar <- sd(result[,2])
 
-
-
+  #generate  Z-Score
+  #(d - (mu) )  / (sigma)
+  Zscore <- vector(length = length(result[,1]))
+  Zscore<- (result[,2] - media)/desviacionEstandar
+  ##get outlayers
+  #z-score < 2sigma
+  outlayers <- c(1:length(data[,1]))
+  outlayers <- outlayers[Zscore > 2*desviacionEstandar]
+  return(outlayers)
+}
